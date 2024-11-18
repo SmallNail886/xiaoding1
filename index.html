@@ -1,0 +1,203 @@
+<!DOCTYPE html>
+
+<html lang="en">
+
+<head>
+
+<meta charset="UTF-8">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>小钉查询</title>
+
+<style>
+
+    body {
+
+        font-family: Arial, sans-serif;
+
+        margin: 0;
+
+        padding: 10px;
+
+        background-color: #f7f7f7;
+
+    }
+
+    h1 {
+
+        text-align: center;
+
+        color: #333;
+
+    }
+
+    .form-container {
+
+        max-width: 400px;
+
+        margin: 0 auto;
+
+        background-color: #fff;
+
+        padding: 20px;
+
+        border-radius: 8px;
+
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+
+    }
+
+    select, input[type="text"], button {
+
+        width: calc(100% - 22px); /* Full width minus padding and border */
+
+        padding: 10px;
+
+        margin-top: 5px;
+
+        margin-bottom: 20px;
+
+        border: 1px solid #ddd;
+
+        border-radius: 4px;
+
+    }
+
+    button {
+
+        background-color: #5cb85c;
+
+        color: white;
+
+        border: none;
+
+        cursor: pointer;
+
+        width: 100%; /* Make button width 100% */
+
+    }
+
+    button:hover {
+
+        background-color: #4cae4c;
+
+    }
+
+    #result {
+
+        background-color: white;
+
+        border: 1px solid #ddd;
+
+        padding: 20px;
+
+        margin-top: 20px;
+
+        white-space: pre-wrap; /* Preserves whitespace formatting */
+
+        text-align: center;
+
+    }
+
+</style>
+
+<script>
+
+function queryData() {
+
+    var daqu = document.getElementById("daqu").value;
+
+    var data = document.getElementById("data").value;
+
+    var type = document.getElementById("type").value;
+
+    var url = "";
+
+    var param = "daqu=" + daqu + "&data=" + data;
+
+
+
+    if (type === "和平") {
+
+        url = "http://jp.frp.one:50695/gethp";
+
+    } else {
+
+        url = "http://jp.frp.one:50695/getaq";
+
+    }
+
+
+
+    fetch(url, {
+
+        method: 'POST',
+
+        headers: {
+
+            'Content-Type': 'application/x-www-form-urlencoded',
+
+        },
+
+        body: param
+
+    })
+
+    .then(response => response.text())
+
+    .then(data => {
+
+        var cleanedText = data.replace(/127\.0\.0\.1/g, '');
+
+        document.getElementById("result").innerText = cleanedText 
+
+    })
+
+    .catch(error => {
+
+        console.error('Error:', error);
+
+        document.getElementById("result").innerText = '请求失败，请检查网络连接或URL是否正确。';
+
+    });
+
+}
+
+</script>
+
+</head>
+
+<body>
+
+<div class="form-container">
+
+    <h1>数据号在线查询</h1>
+
+    <select id="daqu">
+
+        <option value="1">安卓</option>
+
+        <option value="0">iOS</option>
+
+    </select>
+
+    <select id="type">
+
+        <option value="和平">和平</option>
+
+        <option value="暗区">暗区</option>
+
+    </select>
+
+    <input type="text" id="data" placeholder="输入数据">
+
+    <button onclick="queryData()">查询</button>
+
+    <div id="result"></div>
+
+</div>
+
+</body>
+
+</html>
